@@ -60,7 +60,7 @@ void OnMult(int m_ar, int m_br)
 	cout << st;
 
 	fstream file;
-	file.open("single_mult.csv", ios::app);
+	file.open("single_mult_cpp.csv", ios::app);
 
 	file << m_ar << "," << t << ",";
 

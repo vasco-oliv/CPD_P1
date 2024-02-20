@@ -25,9 +25,9 @@ int main (int argc, char *argv[])
 
 	// Open file
 	ofstream file;
-	file.open("single_mult.csv");
+	file.open("single_mult_cpp.csv");
 
-	file << "size,time,l1,l2" << std::endl;
+	file << "size,time,l1,l2" << endl;
 
 	file.close();
 
@@ -52,9 +52,9 @@ int main (int argc, char *argv[])
                 std::cout << "FAIL reset" << endl;
 			
 			fstream file2;
-			file2.open("single_mult.csv", ios::app);
+			file2.open("single_mult_cpp.csv", ios::app);
 
-			file2 << values[0] << "," << values[1] << std::endl;
+			file2 << values[0] << "," << values[1] << endl;
 
 			file2.close();
         }
