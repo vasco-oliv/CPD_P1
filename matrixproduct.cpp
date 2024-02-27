@@ -115,8 +115,7 @@ void OnMultLine(int m_ar, int m_br)
 
 	for(i=0; i<m_ar; i++)
 	{	for(j=0; j<m_br; j++)
-		{	temp = 0;
-			for (k=0; k<m_ar; k++)
+		{	for (k=0; k<m_ar; k++)
 			{
 				temp = pha[i*m_ar + j] * phb[j*m_br + k];
 				phc[i*m_ar + k] += temp;
@@ -129,15 +128,15 @@ void OnMultLine(int m_ar, int m_br)
 	sprintf(st, "Time: %3.3f seconds\n", t);
 	cout << st;
 	
-	fstream file;
+	/*fstream file;
 	file.open("single_mult_line_cpp.csv", ios::app);
 
 	file << m_ar << "," << t << ",";
 
-	file.close(); 
+	file.close(); */
 
 
-	/*
+	
 	// display 10 elements of the result matrix to verify correctness
 	cout << "Result matrix: " << endl;
 	for(i=0; i<1; i++)
@@ -145,7 +144,7 @@ void OnMultLine(int m_ar, int m_br)
 			cout << phc[j] << " ";
 	}
 	cout << endl; 
-	*/
+	
 
     free(pha);
     free(phb);
@@ -202,12 +201,20 @@ void OnMultBlock(int m_ar, int m_br, int bkSize)
 	double t = (double)(Time2 - Time1) / CLOCKS_PER_SEC;
 	sprintf(st, "Time: %3.3f seconds\n", t);
 	cout << st;
-
+	/*
 	fstream file;
 	file.open("single_mult_block_cpp.csv", ios::app);
 
 	file << m_ar << "," << bkSize << "," << t << ",";
-	file.close();
+	file.close();*/
+
+	// display 10 elements of the result matrix to verify correctness
+	cout << "Result matrix: " << endl;
+	for(i=0; i<1; i++)
+	{	for(j=0; j<min(10,m_br); j++)
+			cout << phc[j] << " ";
+	}
+	cout << endl; 
 
 	free(pha);
 	free(phb);
@@ -235,7 +242,7 @@ void init_papi() {
             << " REVISION: " << PAPI_VERSION_REVISION(retval) << "\n";
 }
 
-/*
+
 int main (int argc, char *argv[])
 {
 
@@ -324,4 +331,4 @@ int main (int argc, char *argv[])
 		std::cout << "FAIL destroy" << endl;
 
 }
-*/
+
