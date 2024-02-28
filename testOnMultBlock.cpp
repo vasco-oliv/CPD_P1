@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
     // Open file
     ofstream file;
-    file.open("single_mult_line_cpp.csv");
+    file.open("single_mult_block_cpp.csv");
 
     file << "size,block_size,time,l1,l2" << endl;
 
