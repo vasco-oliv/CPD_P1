@@ -56,12 +56,12 @@ void OnMultLine(int m_ar, int m_br)
     sprintf(st, "Time: %3.3f seconds\n", t);
     cout << st;
 
-    /*fstream file;
-    file.open("single_mult_line_cpp.csv", ios::app);
+    fstream file;
+    file.open("single_mult_line_multi_core_1.csv", ios::app);
 
     file << m_ar << "," << t << ",";
 
-    file.close(); */
+    file.close(); 
 
     // display 10 elements of the result matrix to verify correctness
     cout << "Result matrix: " << endl;
@@ -99,65 +99,171 @@ void init_papi()
               << " REVISION: " << PAPI_VERSION_REVISION(retval) << "\n";
 }
 
-int main(int argc, char *argv[])
+// int main(int argc, char *argv[])
+// {
+
+//     char c;
+//     int lin, col, blockSize;
+//     int op;
+
+//     int EventSet = PAPI_NULL;
+//     long long values[2];
+//     int ret;
+
+//     ret = PAPI_library_init(PAPI_VER_CURRENT);
+//     if (ret != PAPI_VER_CURRENT)
+//         std::cout << "FAIL" << endl;
+
+//     ret = PAPI_create_eventset(&EventSet);
+//     if (ret != PAPI_OK)
+//         cout << "ERROR: create eventset" << endl;
+
+//     ret = PAPI_add_event(EventSet, PAPI_L1_DCM);
+//     if (ret != PAPI_OK)
+//         cout << "ERROR: PAPI_L1_DCM" << endl;
+
+//     ret = PAPI_add_event(EventSet, PAPI_L2_DCM);
+//     if (ret != PAPI_OK)
+//         cout << "ERROR: PAPI_L2_DCM" << endl;
+
+//     op = 1;
+
+//     printf("Dimensions: lins=cols ? ");
+//     cin >> lin;
+//     col = lin;
+
+//     // Start counting
+//     ret = PAPI_start(EventSet);
+//     if (ret != PAPI_OK)
+//         cout << "ERROR: Start PAPI" << endl;
+
+//     OnMultLine(lin, col);
+
+//     ret = PAPI_stop(EventSet, values);
+//     if (ret != PAPI_OK)
+//         cout << "ERROR: Stop PAPI" << endl;
+//     //printf("L1 DCM: %lld \n", values[0]);
+//     //printf("L2 DCM: %lld \n", values[1]);
+
+//     ret = PAPI_reset(EventSet);
+//     if (ret != PAPI_OK)
+//         std::cout << "FAIL reset" << endl;
+
+//     ret = PAPI_remove_event(EventSet, PAPI_L1_DCM);
+//     if (ret != PAPI_OK)
+//         std::cout << "FAIL remove event" << endl;
+
+//     ret = PAPI_remove_event(EventSet, PAPI_L2_DCM);
+//     if (ret != PAPI_OK)
+//         std::cout << "FAIL remove event" << endl;
+
+//     ret = PAPI_destroy_eventset(&EventSet);
+//     if (ret != PAPI_OK)
+//         std::cout << "FAIL destroy" << endl;
+// }
+
+
+int main (int argc, char *argv[])
 {
 
-    char c;
-    int lin, col, blockSize;
-    int op;
+	char c;
+	
+	int EventSet = PAPI_NULL;
+  	long long values[2];
+  	int ret;
+	
+    // Start running
+	ret = PAPI_library_init( PAPI_VER_CURRENT );
+	if ( ret != PAPI_VER_CURRENT )
+		std::cout << "FAIL" << endl;
 
-    int EventSet = PAPI_NULL;
-    long long values[2];
-    int ret;
+	ret = PAPI_create_eventset(&EventSet);
+		if (ret != PAPI_OK) cout << "ERROR: create eventset" << endl;
 
-    ret = PAPI_library_init(PAPI_VER_CURRENT);
-    if (ret != PAPI_VER_CURRENT)
-        std::cout << "FAIL" << endl;
+	ret = PAPI_add_event(EventSet,PAPI_L1_DCM );
+	if (ret != PAPI_OK) cout << "ERROR: PAPI_L1_DCM" << endl;
 
-    ret = PAPI_create_eventset(&EventSet);
-    if (ret != PAPI_OK)
-        cout << "ERROR: create eventset" << endl;
+	ret = PAPI_add_event(EventSet,PAPI_L2_DCM);
+	if (ret != PAPI_OK) cout << "ERROR: PAPI_L2_DCM" << endl;
 
-    ret = PAPI_add_event(EventSet, PAPI_L1_DCM);
-    if (ret != PAPI_OK)
-        cout << "ERROR: PAPI_L1_DCM" << endl;
+    ret = PAPI_add_event(EventSet,PAPI_DP_OPS);
+	if (ret != PAPI_OK) cout << "ERROR: PAPI_DP_OPS" << endl;
 
-    ret = PAPI_add_event(EventSet, PAPI_L2_DCM);
-    if (ret != PAPI_OK)
-        cout << "ERROR: PAPI_L2_DCM" << endl;
+    ret = PAPI_add_event(EventSet,PAPI_L2_DCA );
+	if (ret != PAPI_OK) cout << "ERROR: PAPI_DP_OPS" << endl;
 
-    op = 1;
 
-    printf("Dimensions: lins=cols ? ");
-    cin >> lin;
-    col = lin;
 
-    // Start counting
-    ret = PAPI_start(EventSet);
-    if (ret != PAPI_OK)
-        cout << "ERROR: Start PAPI" << endl;
+    
 
-    OnMultLine(lin, col);
+    
 
-    ret = PAPI_stop(EventSet, values);
-    if (ret != PAPI_OK)
-        cout << "ERROR: Stop PAPI" << endl;
-    //printf("L1 DCM: %lld \n", values[0]);
-    //printf("L2 DCM: %lld \n", values[1]);
+	// Open file
+	ofstream file;
+	file.open("single_mult_line_multi_core_1.csv");
 
-    ret = PAPI_reset(EventSet);
-    if (ret != PAPI_OK)
-        std::cout << "FAIL reset" << endl;
+	file << "size,time,l1,l2,flops" << endl;
 
-    ret = PAPI_remove_event(EventSet, PAPI_L1_DCM);
-    if (ret != PAPI_OK)
-        std::cout << "FAIL remove event" << endl;
+	file.close();
 
-    ret = PAPI_remove_event(EventSet, PAPI_L2_DCM);
-    if (ret != PAPI_OK)
-        std::cout << "FAIL remove event" << endl;
+    for (int i = 4096; i <= 10240; i += 2048) {
+        for (int j = 0; j < 2; j++) {
 
-    ret = PAPI_destroy_eventset(&EventSet);
-    if (ret != PAPI_OK)
-        std::cout << "FAIL destroy" << endl;
+            // Start counting
+            ret = PAPI_start(EventSet);
+            if (ret != PAPI_OK) cout << "ERROR: Start PAPI" << endl;
+
+            OnMultLine(i, i);
+
+            ret = PAPI_stop(EventSet, values);
+            
+            if (ret != PAPI_OK) cout << "ERROR: Stop PAPI" << endl;
+            // printf("L1 DCM: %lld \n",values[0]);
+            // printf("L2 DCM: %lld \n",values[1]);
+            // printf("FLOPS: %lld \n",values[2]);
+            // printf("cache 2 acceses: %lld \n",values[3]);
+
+
+            ret = PAPI_reset( EventSet );
+            
+            if ( ret != PAPI_OK )
+                std::cout << "FAIL reset" << endl;
+			
+			fstream file2;
+			file2.open("single_mult_line_multi_core.csv", ios::app);
+
+			file2 << values[0] << "," << values[1] << ',' << values[2] << endl;
+
+			file2.close();
+        }
+    }
+
+    // Stop running
+    ret = PAPI_remove_event( EventSet, PAPI_L1_DCM );
+	if ( ret != PAPI_OK )
+		std::cout << "FAIL remove event" << endl; 
+
+	ret = PAPI_remove_event( EventSet, PAPI_L2_DCM );
+	if ( ret != PAPI_OK )
+		std::cout << "FAIL remove event" << endl; 
+
+    ret = PAPI_remove_event( EventSet, PAPI_DP_OPS );
+	if ( ret != PAPI_OK )
+		std::cout << "FAIL remove event" << endl; 
+
+
+
+    ret = PAPI_remove_event( EventSet, PAPI_L2_DCA );
+	if ( ret != PAPI_OK )
+		std::cout << "FAIL remove event" << endl; 
+
+
+    	ret = PAPI_destroy_eventset( &EventSet );
+	if ( ret != PAPI_OK )
+		std::cout << "FAIL destroy" << endl;
+        
+
+         
+
+
 }
